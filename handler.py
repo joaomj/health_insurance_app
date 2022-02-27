@@ -11,7 +11,7 @@ from healthinsurance.HealthInsurance import HealthInsurance
 # path = str(Path.cwd().parents[0])
 # path = path + '/models'
 # model = pickle.load(open(path + '/model_knn.pkl', 'rb')) # where the model is stored
-model = pickle.load(open('/models/model_knn.pkl', 'rb')) # where the model is stored
+model = pickle.load(open('models/model_knn.pkl', 'rb')) # where the model is stored
 
 # initialize API
 app = Flask(__name__)
