@@ -8,9 +8,10 @@ from healthinsurance.HealthInsurance import HealthInsurance
 
 # loading model
 """ Its much better to preload model on memory to reduce API response time"""
-path = str(Path.cwd().parents[0])
-path = path + '/models'
-model = pickle.load(open(path + '/model_knn.pkl', 'rb')) # where the model is stored
+# path = str(Path.cwd().parents[0])
+# path = path + '/models'
+# model = pickle.load(open(path + '/model_knn.pkl', 'rb')) # where the model is stored
+model = pickle.load(open('/models/model_knn.pkl', 'rb')) # where the model is stored
 
 # initialize API
 app = Flask(__name__)
