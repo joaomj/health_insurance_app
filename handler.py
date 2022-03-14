@@ -2,6 +2,7 @@ import os
 import pickle
 import pandas as pd
 import sys
+import boto3
 from pathlib import Path
 from flask import Flask, request, Response
 from healthinsurance.HealthInsurance import HealthInsurance
@@ -11,7 +12,20 @@ from healthinsurance.HealthInsurance import HealthInsurance
 # path = str(Path.cwd().parents[0])
 # path = path + '/models'
 # model = pickle.load(open(path + '/model_knn.pkl', 'rb')) # where the model is stored
-model = pickle.load(open('models/model_knn.pkl', 'rb')) # where the model is stored
+# model = pickle.load(open('models/model_knn.pkl', 'rb')) # where the model is stored
+
+
+# open model stored on a S3 Bucket using CONFIG VARS from Heroku:
+s3client = boto3.client('s3',
+                        aws_access_key_id = AWS_ACCESS_KEY_ID, 
+                        aws_secret_key_id = AWS_SECRET_ACCESS_KEY
+                        )
+
+response = s3client.get_object(Bucket = AWS_BUCKET, Key = AWS_MODEL_FILEPATH)
+
+body = response['Body'].read()
+model = pickle.loads(body)
+
 
 # initialize API
 app = Flask(__name__)
