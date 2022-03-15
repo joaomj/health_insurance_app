@@ -17,11 +17,11 @@ from healthinsurance.HealthInsurance import HealthInsurance
 
 # open model stored on a S3 Bucket using CONFIG VARS from Heroku:
 s3client = boto3.client('s3',
-                        aws_access_key_id = os.environ[AWS_ACCESS_KEY_ID], 
-                        aws_secret_key_id = os.environ[AWS_SECRET_ACCESS_KEY]
+                        aws_access_key_id = os.environ['AWS_ACCESS_KEY_ID'], 
+                        aws_secret_key_id = os.environ['AWS_SECRET_ACCESS_KEY']
                         )
 
-response = s3client.get_object(Bucket = os.environ[AWS_BUCKET], Key = os.environ[AWS_MODEL_FILEPATH])
+response = s3client.get_object(Bucket = os.environ['AWS_BUCKET'], Key = os.environ['AWS_MODEL_FILEPATH'])
 
 body = response['Body'].read()
 model = pickle.loads(body)
