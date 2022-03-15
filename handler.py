@@ -5,6 +5,7 @@ import sys
 import boto3
 from pathlib import Path
 from flask import Flask, request, Response
+from decouple import config
 from healthinsurance.HealthInsurance import HealthInsurance
 
 # loading model
@@ -16,15 +17,56 @@ from healthinsurance.HealthInsurance import HealthInsurance
 
 
 # open model stored on a S3 Bucket using CONFIG VARS from Heroku:
+# s3client = boto3.client('s3',
+#                         aws_access_key_id = os.environ['AWS_ACCESS_KEY_ID'], 
+#                         aws_secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY']
+#                         )
+
+
+# response = s3client.get_object(Bucket = os.environ['AWS_BUCKET'], Key = os.environ['AWS_MODEL_FILEPATH'])
+
+# body = response['Body'].read()
+# model = pickle.loads(body)
+
+# =====================================================
+# solution from
+# https://towardsdatascience.com/how-to-load-data-from-a-pickle-file-in-s3-using-python-ffe2866b7eba
+
+# import boto3.session
+
+# cred = boto3.Session().get_credentials()
+# ACCESS_KEY = cred.access_key
+# SECRET_KEY = cred.secret_key
+# s3client = boto3.client('s3',
+#                         aws_access_key_id = ACCESS_KEY, 
+#                         aws_secret_access_key = SECRET_KEY
+#                         )
+
+# bucket = 'my_bucket_name'
+# key = 'obj_key'
+
+# response = s3client.get_object(Bucket = bucket, Key = key)
+# body = response['Body'].read()
+# model = pickle.loads(body)
+# =====================================================
+
+# =====================================================
+# my adaptation
+ACCESS_KEY = config('ACCESS_KEY')
+SECRET_KEY = config('SECRET_KEY')
+BUCKET = config('BUCKET')
+OBJ_KEY = config('OBJ_KEY')
+
 s3client = boto3.client('s3',
-                        aws_access_key_id = os.environ['AWS_ACCESS_KEY_ID'], 
-                        aws_secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY']
+                        aws_access_key_id = ACCESS_KEY, 
+                        aws_secret_access_key = SECRET_KEY
                         )
 
-response = s3client.get_object(Bucket = os.environ['AWS_BUCKET'], Key = os.environ['AWS_MODEL_FILEPATH'])
-
+response = s3client.get_object(Bucket = BUCKET, Key = OBJ_KEY)
 body = response['Body'].read()
 model = pickle.loads(body)
+# =====================================================
+
 
 
 # initialize API
@@ -66,3 +108,4 @@ def health_insurance_predict():
 if __name__ == '__main__':
     port = os.environ.get('PORT', 5000)
     app.run(host = '0.0.0.0', port = port, debug = True)
+    # app.run(host = '0.0.0.0', port = port)

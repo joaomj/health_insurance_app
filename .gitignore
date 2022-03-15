@@ -1,2 +1,5 @@
 # files to ignore
 keys.csv
+
+# extensions
+*.env
